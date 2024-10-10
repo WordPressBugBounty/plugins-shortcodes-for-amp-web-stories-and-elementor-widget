@@ -3,11 +3,11 @@
  * Plugin Name: Web Stories Widgets For Elementor
  * Description: Web Stories Shortcodes for recent Story [Recent-stories column="3" show-button="yes" show-no-of-story="all" button-text="View" order="DESC" btn-color=" " btn-text-color=""].
  * Plugin URI:  https://coolplugins.net
- * Version:     1.1
+ * Version:     1.1.1
  * Author:      Cool Plugins
  * Author URI:  https://coolplugins.net/
  * Text Domain: WSAE
- * Elementor tested up to: 3.8.0
+ * Elementor tested up to: 3.24.5
 */
 
 use Google\Web_Stories\Story_Renderer\HTML;
@@ -20,7 +20,7 @@ if (defined('WSAE_VERSION')) {
     return;
 }
 
-define('WSAE_VERSION', '1.1');
+define('WSAE_VERSION', '1.1.1');
 define('WSAE_FILE', __FILE__);
 define('WSAE_PATH', plugin_dir_path(WSAE_FILE));
 define('WSAE_URL', plugin_dir_url(WSAE_FILE));
@@ -93,6 +93,10 @@ final class Webstory_Widget_Addon
 
         }
     public function wsae_recent_webstory_call($atts){
+         // Load styles and scripts only if shortcodes are used in the content
+        if (!class_exists('\Google\Web_Stories\Plugin')) {
+            return '<p>' . __('Error: Web Stories plugin is not activated.', 'WSAE') . '</p>';
+        }
         wp_enqueue_style( 'wsae-standalone-amp-story-player-style' );
         wp_enqueue_script( 'wsae-standalone-amp-story-player-script' );
         wp_enqueue_style('standalone-custom-style', WSAE_URL . 'assets/css/wsae-custom-styl.css');
@@ -108,12 +112,38 @@ final class Webstory_Widget_Addon
              'btn-text-color'=>'#000',
 
          ), $atts, 'wsae' );
+
+         // Sanitize the values
+        $atts['column'] = intval($atts['column']); // Ensure column is an integer
+        if (is_numeric($atts['show-no-of-story'])) {
+            $atts['show-no-of-story'] = intval($atts['show-no-of-story']); // Sanitize as integer
+        } else {
+            $atts['show-no-of-story'] = sanitize_text_field($atts['show-no-of-story']); // Sanitize as string (e.g., 'all')
+        }
+        $atts['show-button'] = sanitize_text_field($atts['show-button']);
+        $atts['button-text'] = sanitize_text_field($atts['button-text']);
+        $atts['order'] = sanitize_text_field($atts['order']);
+        // $atts['btn-color'] = sanitize_hex_color($atts['btn-color']); // For color codes
+        // $atts['btn-text-color'] = sanitize_hex_color($atts['btn-text-color']); // For color codes
+
+           // Sanitize colors using a similar approach
+        if (sanitize_hex_color($atts['btn-color'])) {
+            $atts['btn-color'] = sanitize_hex_color($atts['btn-color']); // Valid hex color
+        } else {
+            $atts['btn-color'] = sanitize_text_field($atts['btn-color']); // Sanitize as string
+        }
+        
+        if (sanitize_hex_color($atts['btn-text-color'])) {
+            $atts['btn-text-color'] = sanitize_hex_color($atts['btn-text-color']); // Valid hex color
+        } else {
+            $atts['btn-text-color'] = sanitize_text_field($atts['btn-text-color']); // Sanitize as string
+        }
          $html = '';
 
          
-              if ( ! class_exists( '\Google\Web_Stories\Plugin' ) ) {
-                return;
-             }
+        // if ( ! class_exists( '\Google\Web_Stories\Plugin' ) ) {
+        //     return;
+        //     }
 
             require WSAE_PATH . 'includes/wsae-recent-story.php';
             return $html;
@@ -131,15 +161,19 @@ final class Webstory_Widget_Addon
              
 
          ), $atts, 'wsae' );
-         $showbtn = ($atts['show-button'] == "yes") ? 'block' : 'none';
+
+          // Sanitize attributes
+        $atts['id'] = intval($atts['id']); // Expecting 'id' to be numeric
+        $showbtn = ($atts['show-button'] === "yes") ? 'block' : 'none';
+        $atts['button-text'] = sanitize_text_field($atts['button-text']);
 
          $html = '';
         
           
-           if(empty($atts['id'])){
-               return;
+        if(empty($atts['id'])){
+            return;
 
-           }
+        }
           
          $current_post = get_post($atts['id']);     
          $story = new Story();
@@ -165,14 +199,13 @@ final class Webstory_Widget_Addon
             ( function_exists( 'is_amp_endpoint' ) && is_amp_endpoint() )
         ) {
             $player_style = sprintf( 'margin: %s', esc_attr( $margin ) );            
-            
           }
        
             $html.='   <div class="wp-block-web-stories-embed '.esc_attr( $align ).'">
                         <amp-story-player width="'.esc_attr( $args['width'] ).'" height="'.esc_attr( $args['height'] ).'" style="'.esc_attr( $player_style ).'">
                              <a href="'. esc_url( $url ).'" style="'.esc_attr( $poster_style ).'">'.esc_html( $title ).'</a>
                          </amp-story-player>
-                            <a href="' . esc_url($url) . '" ><button class="wae_btn_setting" style="display:'.$showbtn .';">'.$atts['button-text'].'</button></a>
+                            <a href="' . esc_url($url) . '" ><button class="wae_btn_setting" style="display:'. esc_attr($showbtn) .';">'. esc_html($atts['button-text']) .'</button></a>
                        </div>';
          
 

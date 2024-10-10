@@ -16,24 +16,23 @@ $showbtn=($atts['show-button']=="yes")?'block':'none';
 $html .= '<style>
 .wsae-grid-container {
   display: grid;
-  grid-template-columns: repeat('.$atts['column'].', auto [col-start]);
+  grid-template-columns: repeat('.esc_attr($atts['column']).', auto [col-start]);
   grid-gap:5px;
-    overflow:auto;
+  overflow:auto;
   padding: 5px;
   
 }
 .wase_gridb_button{
-     color:'.$atts['btn-text-color'].';
-    display:'.$showbtn.';
- 
-  background-color: '.$atts['btn-color'].';
+  color:'.esc_attr($atts['btn-text-color']).';
+  display:'.esc_attr($showbtn).';
+  background-color: '.esc_attr($atts['btn-color']).';
  
 }
 </style><div class="wsae-grid-container">';
 
 
 foreach ($the_query as $key => $value) {
-    $current_post = get_post($value->ID);
+    $current_post = get_post(intval($value->ID));
 
     $story = new Story();
 
@@ -66,17 +65,12 @@ if (
 
 }
 
-
 $html.= '   <div class="wp-block-web-stories-embed ' . esc_attr($align) . '">
                 <amp-story-player  style="' . esc_attr($player_style) . '">
                     <a href="' . esc_url($url) . '" style="' . esc_attr($poster_style) . '">' . esc_html($title) . '</a>
                 </amp-story-player>
-                <a href="' . esc_url($url) . '" ><button class="wase_gridb_button">'.$atts['button-text'].'</button></a>
+                <a href="' . esc_url($url) . '" ><button class="wase_gridb_button">'.esc_html($atts['button-text']).'</button></a>
             </div>';
-
-
-
-
 }
 
 $html.='</div>';

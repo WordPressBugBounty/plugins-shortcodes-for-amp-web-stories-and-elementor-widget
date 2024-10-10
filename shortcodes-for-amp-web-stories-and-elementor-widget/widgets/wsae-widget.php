@@ -65,25 +65,28 @@ class WSAE_Widget extends Widget_Base
 				$post_names=[];
                 $post_idss=[];
                 
-                
 				foreach ($the_query  as $key => $value) {
                 $current_post = get_post($value->ID);
 
                 $story = new Story();
                 $story->load_from_post($current_post);
 				
-                
-
-				$post_names[$value->post_title]=$value->post_title;
-				$post_idss[]=array('id'=>$value->ID,'title'=>$value->post_title,'url'=>$story->get_url(),'poster'=>$story->get_poster_portrait());
+                // Escape the post title before adding it to the array
+                $escaped_title = esc_html( $value->post_title );
+                $post_names[$escaped_title] = $escaped_title;
+                $post_idss[] = array(
+                    'id'     => $value->ID,
+                    'title'  => $escaped_title, // Use escaped title
+                    'url'    => esc_url( $story->get_url() ), // Escape the URL
+                    'poster' => esc_url( $story->get_poster_portrait() ), // Escape the poster URL
+                );
                 }
                 
                 if(empty($post_names)){
-                    $post_names['select'] = 'You have no story to show';
+                    $post_names['select'] = esc_html__( 'You have no story to show', 'WSAE' ); // Escape static text
                 }              
 
-                $defal_select = isset($the_query[0]->post_title) ? $the_query[0]->post_title : 'select';
-
+                $defal_select = isset( $the_query[0]->post_title ) ? esc_html( $the_query[0]->post_title ) : esc_html__( 'select', 'WSAE' ); // Escape default select text
 
             $this->start_controls_section(
             'WSAE_layout_section',
@@ -103,25 +106,25 @@ class WSAE_Widget extends Widget_Base
             ]
         );
         $this->add_control(
-    'wsae_story_height',
-    [
-        'label' => esc_html__('Story Height', 'WSAE'),
-        'type' => \Elementor\Controls_Manager::SLIDER,
-        'size_units' => ['px'],
-        'range' => [
-            'px' => [
-                'min' => 100,
-                'max' => 1000,
-                'step' => 1,
-            ],
-           
-        ],  
-     
-        'selectors' => [
-            '{{WRAPPER}} .wsae-wrapper' => '--story-size: {{SIZE}}{{UNIT}};',
-        ],
-    ]
-);
+            'wsae_story_height',
+            [
+                'label' => esc_html__('Story Height', 'WSAE'),
+                'type' => \Elementor\Controls_Manager::SLIDER,
+                'size_units' => ['px'],
+                'range' => [
+                    'px' => [
+                        'min' => 100,
+                        'max' => 1000,
+                        'step' => 1,
+                    ],
+                
+                ],  
+            
+                'selectors' => [
+                    '{{WRAPPER}} .wsae-wrapper' => '--story-size: {{SIZE}}{{UNIT}};',
+                ],
+            ]
+        );
 
 
         $this->add_control(
@@ -144,6 +147,7 @@ class WSAE_Widget extends Widget_Base
 				'type' => Controls_Manager::TEXT,
 				'default' => __( 'View', 'WSAE' ),
 				'placeholder' => __( 'Enter text for button', 'WSAE' ),
+                'sanitize_callback' => 'sanitize_text_field',
                 'condition' => [
                     'wsae_button' => 'yes',
                 ],
@@ -164,30 +168,30 @@ class WSAE_Widget extends Widget_Base
 			]
 		); 
         $this->add_control(
-    'wsae_button_text_color',
-    array(
-        'label' => __('Button Color', 'WSAE'),
-        'type' => Controls_Manager::COLOR,
-        'selectors' => array('{{WRAPPER}} .wae_btn_setting' => 'color: {{VALUE}} !important',
-        ),
-        'condition' => [
-            'wsae_button' => 'yes',
-        ],
-    )
-);
+            'wsae_button_text_color',
+            array(
+                'label' => __('Button Text Color', 'WSAE'),
+                'type' => Controls_Manager::COLOR,
+                'selectors' => array('{{WRAPPER}} .wae_btn_setting' => 'color: {{VALUE}} !important',
+                ),
+                'condition' => [
+                    'wsae_button' => 'yes',
+                ],
+            )
+        );
 
-$this->add_control(
-    'wsae_button_color',
-    array(
-        'label' => __('Button Background', 'WSAE'),
-        'type' => Controls_Manager::COLOR,
-        'selectors' => array('{{WRAPPER}} .wae_btn_setting' => 'background-color: {{VALUE}} !important',
-        ),
-        'condition' => [
-            'wsae_button' => 'yes',
-        ],
-    )
-);
+        $this->add_control(
+            'wsae_button_color',
+            array(
+                'label' => __('Button Background', 'WSAE'),
+                'type' => Controls_Manager::COLOR,
+                'selectors' => array('{{WRAPPER}} .wae_btn_setting' => 'background-color: {{VALUE}} !important',
+                ),
+                'condition' => [
+                    'wsae_button' => 'yes',
+                ],
+            )
+        );
 
         
        $this->add_control(
@@ -217,19 +221,21 @@ $this->add_control(
        $settings = $this->get_settings_for_display();
 	   $singlid='';
 	   if($settings['wsae_layout']=='select'){
-           return __('You have no story to show','WSAE');
+        echo esc_html__('You have no story to show', 'WSAE');
+        return;
        }
        else{
 	   foreach ($settings['wsae_ids'] as $key => $value) {
 		 if($value['title']==$settings['wsae_layout']){
-             $singlid=$value['id'];
+            $singlid = esc_attr($value['id']);
              
 		 }
 	   }
 	   require WSAE_PATH . 'widgets/wsae-rendor.php';
 
-		}
-	 
+	}
+	  // Escape the button text to prevent XSS
+      $button_text = isset($settings['wsae_btn_text']) ? esc_html($settings['wsae_btn_text']) : '';
 
     }
 
@@ -239,7 +245,6 @@ $this->add_control(
         if ( ! class_exists( '\Google\Web_Stories\Plugin' ) ) {
             return;
         }
-
 
         $args = '';
         
@@ -251,11 +256,9 @@ $this->add_control(
         ];
         $args = wp_parse_args($args, $defaults);
         $align = sprintf('align%s', $args['align']);
-      
        
         $margin = ('center' === $args['align']) ? 'auto' : '0';
         $player_style = sprintf('width: %s;height: %s;margin: %s', esc_attr($args['width']), esc_attr($args['height']), esc_attr($margin));
-        
 
         ?>
 	    <#
@@ -277,27 +280,27 @@ $this->add_control(
         })
         if(settings.wsae_layout=='select'){
            #>
-           <span>You have no story to show</span>
+           <span><?php echo esc_html__('You have no story to show', 'WSAE'); ?></span>
            <#
         }
        else{
-          
+        function esc_html(str) {
+        return String(str).replace(/&/g, '&amp;')
+                      .replace(/</g, '&lt;')
+                      .replace(/>/g, '&gt;')
+                      .replace(/"/g, '&quot;')
+                      .replace(/'/g, '&#039;');
+         }
 		#>
         <div class="wsae-wrapper wp-block-web-stories-embed  <?php echo esc_attr($align); ?>">
             <amp-story-player class="wsae-amp">
                 <a href="{{{url}}}" style="--story-player-poster: url({{{poster}}})">{{{title}}}</a>
             </amp-story-player>
-            <a href="{{{url}}}"><button class="wae_btn_setting" style="display:{{{showbtn}}};">{{{settings.wsae_btn_text}}}</button></a>
+            <a href="{{{url}}}"><button class="wae_btn_setting" style="display:{{{showbtn}}};">{{{ esc_html(settings.wsae_btn_text) }}}</button></a>
         </div>
         <# }#>
 		<?php
-                
-
-
-
-
-    }
-
+    }    
 }
 
 \Elementor\Plugin::instance()->widgets_manager->register_widget_type(new WSAE_Widget());

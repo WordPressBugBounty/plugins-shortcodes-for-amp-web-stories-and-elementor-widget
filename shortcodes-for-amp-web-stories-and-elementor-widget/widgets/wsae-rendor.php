@@ -22,12 +22,13 @@ $defaults = [
     'width' => '360px',
 ];
 $args = wp_parse_args($args, $defaults);
-$align = sprintf('align%s', $args['align']);
-$url = $story->get_url();
-$title = $story->get_title();
+$align = sprintf('align%s', esc_attr($args['align']));
+$url = esc_url($story->get_url());
+$title = esc_html($story->get_title());
 $poster = !empty($story->get_poster_portrait()) ? esc_url($story->get_poster_portrait()) : '';
 $margin = ('center' === $args['align']) ? 'auto' : '0';
-$player_style = sprintf('margin: %s;width: %s;height: %s',  esc_attr($margin),esc_attr($args['width']), esc_attr($args['height']));
+// Player style and poster style, both escaped properly.
+$player_style = sprintf('margin: %s;width: %s;height: %s', esc_attr($margin), esc_attr($args['width']), esc_attr($args['height']));
 $poster_style = !empty($poster) ? sprintf('--story-player-poster: url(%s)', $poster) : '';
 
 if (
@@ -43,7 +44,9 @@ $html .= '   <div class="wsae-wrapper wp-block-web-stories-embed ' . esc_attr($a
                 <amp-story-player class="wsae-amp" >
                     <a href="' . esc_url($url) . '" style="' . esc_attr($poster_style) . '">' . esc_html($title) . '</a>
                 </amp-story-player>
-                <a href="' . esc_url($url) . '" ><button class="wae_btn_setting " style="display:'.$showbtn .';">'.$settings['wsae_btn_text'].'</button></a>
+                <a href="' . esc_url($url) . '" >
+                  <button class="wae_btn_setting" style="display:' . esc_attr($showbtn) . ';">' . esc_html($settings['wsae_btn_text']) . '</button>
+                </a>
             </div>';
 
 
