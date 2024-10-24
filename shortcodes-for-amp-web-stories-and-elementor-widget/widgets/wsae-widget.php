@@ -1,16 +1,13 @@
 <?php
-use Elementor\Controls_Manager;
-use Elementor\Group_Control_Image_Size;
-use Elementor\Group_Control_Typography;
-use Elementor\Repeater;
-use Elementor\Scheme_Color;
-use Elementor\Scheme_Typography;
-use Elementor\Utils;
+if (!defined('ABSPATH')) {
+    exit; // Exit if accessed directly
+}
 use Elementor\Widget_Base;
+use Elementor\Controls_Manager;
 use Google\Web_Stories\Story_Renderer\HTML;
 use Google\Web_Stories\Model\Story;
 
-class WSAE_Widget extends \Elementor\Widget_Base
+class WSAE_Widget extends Widget_Base
 {
 
     public function __construct($data = [], $args = null)
@@ -18,12 +15,7 @@ class WSAE_Widget extends \Elementor\Widget_Base
         parent::__construct($data, $args);
        
       wp_register_script('standalone-custom-script', WSAE_URL . 'assets/js/wsae-custom-script.js', ['elementor-frontend','jquery'], null, true);
-        wp_register_style('standalone-custom-style', WSAE_URL . 'assets/css/wsae-custom-styl.css');
-
-   
-       
-
-
+      wp_register_style('standalone-custom-style', WSAE_URL . 'assets/css/wsae-custom-styl.css');
     }
 
     public function get_script_depends()
@@ -31,17 +23,12 @@ class WSAE_Widget extends \Elementor\Widget_Base
         if (\Elementor\Plugin::$instance->editor->is_edit_mode() || \Elementor\Plugin::$instance->preview->is_preview_mode()) {
             return ['standalone-custom-script','wsae-standalone-amp-story-player-script'];
         }
-            return [ 'wsae-standalone-amp-story-player-script'];
-
-            
-
-        
+        return [ 'wsae-standalone-amp-story-player-script'];
     }
 
     public function get_style_depends()
     {
         return ['wsae-standalone-amp-story-player-style','standalone-custom-style'];
-
     }
 
     public function get_name()
@@ -56,7 +43,7 @@ class WSAE_Widget extends \Elementor\Widget_Base
 
     public function get_icon()
     {
-        return 'eicon-time-line';
+        return 'eicon-slider-push';
     }
 
     public function get_categories()
@@ -78,30 +65,34 @@ class WSAE_Widget extends \Elementor\Widget_Base
 				$post_names=[];
                 $post_idss=[];
                 
-                
 				foreach ($the_query  as $key => $value) {
-                    $current_post = get_post($value->ID);
+                $current_post = get_post($value->ID);
 
                 $story = new Story();
                 $story->load_from_post($current_post);
 				
-                
-
-				$post_names[$value->post_title]=$value->post_title;
-				$post_idss[]=array('id'=>$value->ID,'title'=>$value->post_title,'url'=>$story->get_url(),'poster'=>$story->get_poster_portrait());
+                // Escape the post title before adding it to the array
+                $escaped_title = esc_html( $value->post_title );
+                $post_names[$escaped_title] = $escaped_title;
+                $post_idss[] = array(
+                    'id'     => $value->ID,
+                    'title'  => $escaped_title, // Use escaped title
+                    'url'    => esc_url( $story->get_url() ), // Escape the URL
+                    'poster' => esc_url( $story->get_poster_portrait() ), // Escape the poster URL
+                );
                 }
                 
                 if(empty($post_names)){
-                    $post_names['select'] = 'You have no story to show';
-                }
-               
-                $defal_select = isset($the_query[0]->post_title) ? $the_query[0]->post_title : $post_names['select'];
+                    $post_names['select'] = esc_html__( 'You have no story to show', 'WSAE' ); // Escape static text
+                }              
 
-        $this->start_controls_section(
+                $defal_select = isset( $the_query[0]->post_title ) ? esc_html( $the_query[0]->post_title ) : esc_html__( 'select', 'WSAE' ); // Escape default select text
+
+            $this->start_controls_section(
             'WSAE_layout_section',
             [
                 'label' => __('Layout Settings', 'WSAE'),
-                'tab' => \Elementor\Controls_Manager::TAB_CONTENT,
+                'tab' => Controls_Manager::TAB_CONTENT,
             ]
         );
 
@@ -109,53 +100,238 @@ class WSAE_Widget extends \Elementor\Widget_Base
             'wsae_layout',
             [
                 'label' => __('Select story', 'WSAE'),
-                'type' => \Elementor\Controls_Manager::SELECT,
+                'type' => Controls_Manager::SELECT,
                 'default' => $defal_select ,
                 'options' => $post_names,
             ]
         );
 
         $this->add_control(
-			'wsae_btn_text',
-			[
-				'label' => __( 'Button text', 'WSAE' ),
-				'type' => \Elementor\Controls_Manager::TEXT,
-				'default' => __( 'Default view', 'WSAE' ),
-				'placeholder' => __( 'Enter text for button', 'WSAE' ),
-			]
-		);
+            'wsae_style',
+            [
+                'label' => __('Style', 'WSAE'),
+                'type' => Controls_Manager::SELECT,
+                'default' => 'default',
+                'options' => [
+                    'default'=>  esc_html__('Default','WSAE'),
+                    'circle'=>  esc_html__('Circle','WSAE'),
+                ],
+            ]
+        );
 
+        $this->add_control(
+            'wsae_story_height',
+            [
+                'label' => esc_html__('Story Height', 'WSAE'),
+                'type' => \Elementor\Controls_Manager::SLIDER,
+                'size_units' => ['px'],
+                'range' => [
+                    'px' => [
+                        'min' => 50,
+                        'max' => 500,
+                        'step' => 1,
+                    ],
+                
+                ],  
+            
+                'selectors' => [
+                    '{{WRAPPER}} .wsae-wrapper' => '--story-size: {{SIZE}}{{UNIT}};',
+                ],
+            ]
+        );
 
-   /*      $this->add_group_control(
-			\Elementor\Group_Control_Typography::get_type(),
-			[
-				'name' => 'content_typography',
-				'label' => __( 'Button Typography', 'WSAE' ),
-				'scheme' => Scheme_Typography::TYPOGRAPHY_1,
-				'selector' => '{{WRAPPER}} .wae_btn_setting',
-			]
-		); */
-        
-       $this->add_control(
-			'wsae_ids',
-			[
-				'label' => __( 'post ids', 'WSAE'),
-				'type' => \Elementor\Controls_Manager::HIDDEN,
-				'default' => $post_idss,
-			]
-		);
 
         $this->add_control(
 			'wsae_button',
 			[
 				'label' => __( 'Show Button', 'WSAE'),
-				'type' => \Elementor\Controls_Manager::SWITCHER,
+				'type' => Controls_Manager::SWITCHER,
 				'label_on' => __( 'Show', 'WSAE'),
 				'label_off' => __( 'Hide', 'WSAE'),
 				'return_value' => 'yes',
-				'default' => 'yes',
+				'default' => 'no',
+                'condition' => [
+                    'wsae_style' => 'default',
+                ],
 			]
 		);
+        
+
+        $this->add_control(
+			'wsae_btn_text',
+			[
+				'label' => __( 'Button text', 'WSAE' ),
+				'type' => Controls_Manager::TEXT,
+				'default' => __( 'View', 'WSAE' ),
+				'placeholder' => __( 'Enter text for button', 'WSAE' ),
+                'sanitize_callback' => 'sanitize_text_field',
+                'condition' => [
+                    'wsae_button' => 'yes',
+                    'wsae_style' => 'default',
+                ],
+			]
+		);
+
+
+        $this->add_group_control(
+			\Elementor\Group_Control_Typography::get_type(),
+			[
+				'name' => 'content_typography',
+				'label' => __( 'Button Typography', 'WSAE' ),
+				'type' => \Elementor\Group_Control_Typography::get_type(),
+				'selector' => '{{WRAPPER}} .wae_btn_setting',
+                'condition' => [
+                    'wsae_button' => 'yes',
+                    'wsae_style' => 'default',
+                ],
+			]
+		); 
+        $this->add_control(
+            'wsae_button_text_color',
+            array(
+                'label' => __('Button Text Color', 'WSAE'),
+                'type' => Controls_Manager::COLOR,
+                'selectors' => array('{{WRAPPER}} .wae_btn_setting' => 'color: {{VALUE}} !important',
+                ),
+                'condition' => [
+                    'wsae_button' => 'yes',
+                    'wsae_style' => 'default',
+                ],
+            )
+        );
+
+        $this->add_control(
+            'wsae_button_color',
+            array(
+                'label' => __('Button Background', 'WSAE'),
+                'type' => Controls_Manager::COLOR,
+                'selectors' => array('{{WRAPPER}} .wae_btn_setting' => 'background-color: {{VALUE}} !important',
+                ),
+                'condition' => [
+                    'wsae_button' => 'yes',
+                    'wsae_style' => 'default',
+                ],
+            )
+        );
+
+        $this->add_control(
+            'wsae_border_width',
+            array(
+                'label' => __('Border Width', 'WSAE'),
+                'type' => \Elementor\Controls_Manager::SLIDER,
+                'size_units' => ['px'],
+                'default' => [
+                    'size' => 2,
+                    'unit' => 'px',
+                ],
+                'range' => [
+                    'px' => [
+                        'min' => 0,
+                        'max' => 20,
+                        'step' => 1,
+                    ],
+                ],  
+                'selectors' => array(
+                    '{{WRAPPER}} .wsae-wrapper' => '--wsae-border-width: {{SIZE}}{{UNIT}};',
+                ),
+                'condition' => [
+                    'wsae_style' => 'circle',
+                ],
+            )
+        );
+
+        $this->add_control(
+            'wsae_border_padding',
+            array(
+                'label' => __('Padding', 'WSAE'),
+                'type' => \Elementor\Controls_Manager::SLIDER,
+                'size_units' => ['px'],
+                'default' => [
+                    'size' => 5,
+                    'unit' => 'px',
+                ],
+                'range' => [
+                    'px' => [
+                        'min' => 0,
+                        'max' => 20,
+                        'step' => 1,
+                    ],
+                ],  
+                'selectors' => array(
+                    '{{WRAPPER}} .wsae-wrapper' => '--wsae-border-padding: {{SIZE}}{{UNIT}};',
+                ),
+                'condition' => [
+                    'wsae_style' => 'circle',
+                ],
+            )
+        );
+
+        
+        $this->add_control(
+            'wsae_border_color_type',
+            array(
+                'label' => __('Border Color Type', 'WSAE'),
+                'type' => Controls_Manager::CHOOSE,
+                'default' => 'gradient', // or 'gradient'
+                'options' => array(
+                    'simple'     => array(
+                        'title' => esc_html__( 'Simple', 'WSAE' ),
+                        'icon'  => 'eicon-paint-brush',
+                    ),
+                    'gradient'   => array(
+                        'title' => esc_html__( 'Gradient', 'WSAE' ),
+                        'icon'  => 'eicon-barcode',
+                    )),
+                'condition' => [
+                    'wsae_style' => 'circle',
+                ],
+            )
+        );
+
+        // Border Normal
+        $this->add_control(
+            'wsae_primary_border_color',
+            array(
+                'label'     => esc_html__( 'Primary Border Color', 'WSAE' ),
+                'type'      => \Elementor\Controls_Manager::COLOR,
+                'default' => '#F01111', 
+                'selectors' => array(
+                    '{{WRAPPER}} .wsae-wrapper' => '--wsae-border-color: {{VALUE}}',
+                        ),
+                'condition' => array(
+                    'wsae_border_color_type' => array( 'simple', 'gradient'),
+                    'wsae_style' => 'circle',
+                ),
+            )
+        );
+
+       // Border Gradient 
+        $this->add_control(
+            'wsae_secondary_border_color',
+            array(
+                'label'     => esc_html__( 'Secondary Border Color', 'WSAE' ),
+                'type'      => \Elementor\Controls_Manager::COLOR,
+                'default' => '#800080', 
+                'selectors' => array(
+                    '{{WRAPPER}} .wsae-wrapper' => '--wsae-gradient-color: {{VALUE}}',
+                    ),
+                'condition' => array(
+                    'wsae_border_color_type' => 'gradient',
+                    'wsae_style' => 'circle',
+                ),
+            )
+        );
+
+       $this->add_control(
+			'wsae_ids',
+			[
+				'label' => __( 'post ids', 'WSAE'),
+				'type' => Controls_Manager::HIDDEN,
+				'default' => $post_idss,
+			]
+		);
+
+
         $this->end_controls_section();
 
        
@@ -165,7 +341,6 @@ class WSAE_Widget extends \Elementor\Widget_Base
     // for frontend
     protected function render()
     {
-       
         if ( ! class_exists( '\Google\Web_Stories\Plugin' ) ) {
             return;
         }
@@ -173,19 +348,21 @@ class WSAE_Widget extends \Elementor\Widget_Base
        $settings = $this->get_settings_for_display();
 	   $singlid='';
 	   if($settings['wsae_layout']=='select'){
-           return;
+        echo esc_html__('You have no story to show', 'WSAE');
+        return;
        }
        else{
 	   foreach ($settings['wsae_ids'] as $key => $value) {
 		 if($value['title']==$settings['wsae_layout']){
-             $singlid=$value['id'];
+            $singlid = esc_attr($value['id']);
              
 		 }
 	   }
 	   require WSAE_PATH . 'widgets/wsae-rendor.php';
 
-		}
-	 
+	}
+	  // Escape the button text to prevent XSS
+      $button_text = isset($settings['wsae_btn_text']) ? esc_html($settings['wsae_btn_text']) : '';
 
     }
 
@@ -195,7 +372,6 @@ class WSAE_Widget extends \Elementor\Widget_Base
         if ( ! class_exists( '\Google\Web_Stories\Plugin' ) ) {
             return;
         }
-
 
         $args = '';
         
@@ -207,51 +383,66 @@ class WSAE_Widget extends \Elementor\Widget_Base
         ];
         $args = wp_parse_args($args, $defaults);
         $align = sprintf('align%s', $args['align']);
-      
        
         $margin = ('center' === $args['align']) ? 'auto' : '0';
         $player_style = sprintf('width: %s;height: %s;margin: %s', esc_attr($args['width']), esc_attr($args['height']), esc_attr($margin));
-        
 
         ?>
 	    <#
 			let url=''
             poster='' 
-            title=''
+            title=''  
             ;
             var showbtn = (settings.wsae_button == "yes") ? 'block' : 'none';
 
-	    _.each( settings.wsae_ids, function( item, index ) {
+	        _.each( settings.wsae_ids, function( item, index ) {
 			
 			if(item.title==settings.wsae_layout){
 				url=item.url;
                 poster=item.poster;
                 title=item.title;
-
+                console.log(poster);
 			}
-        
         })
-        if(settings.wsae_layout=='select'){
-           
-       }
-       else{
-          
-		#>
-            <div class="wsae-wrapper wp-block-web-stories-embed  <?php echo esc_attr($align); ?>">
-                <amp-story-player class="wsae-amp" width="360px" height="600px" style="<?php echo esc_attr($player_style) ; ?>">
-                    <a href="{{{url}}}" style="--story-player-poster: url({{{poster}}})">{{{title}}}</a>
-                </amp-story-player>
-                <a href="{{{url}}}" ><button class="wae_btn_setting" style="display:{{{showbtn}}};">{{{settings.wsae_btn_text}}}</button></a>
-            </div>
-			<# }#>
-				<?php
+        if (settings.wsae_layout == 'select') {
+                #>
+                <span><?php echo esc_html__('You have no story to show', 'WSAE'); ?></span>
+                <#
+            } else {
+                function esc_html(str) {
+                       return String(str).replace(/&/g, '&amp;')
+                      .replace(/</g, '&lt;')
+                      .replace(/>/g, '&gt;')
+                      .replace(/"/g, '&quot;')
+                      .replace(/'/g, '&#039;');
+                }
+                let wsae_circle = settings.wsae_style == 'circle'? 'wsae_circle':"";
+                #>
                 
-
-
-
-
-    }
-
+                <div class="wsae-wrapper wp-block-web-stories-embed {{{wsae_circle}}} <?php echo esc_attr($align); ?>">
+                <# 
+                    // Determine the image source based on whether the poster is set
+                    var imageSrc = (poster) ? poster : '<?php echo esc_url(WSAE_URL . 'assets/images/default_poster.png'); ?>';
+                    #>
+                      <#  if (settings.wsae_style == 'circle') { #>
+                        <a href="{{{url}}}"> 
+                        <div class="borderDiv">
+                            <!-- <# console.log(poster) #> -->
+                    
+                        <img src="{{{imageSrc}}}" alt="{{title}}">
+                        </div>
+                        </a>
+                <# } else { #>
+                        <amp-story-player class="wsae-amp">
+                            <a href="{{{url}}}" style="--story-player-poster: url({{{poster}}})">{{{esc_html(title)}}}</a>
+                        </amp-story-player>
+                        <a href="{{{url}}}"><button class="wae_btn_setting" style="display:{{{showbtn}}};">{{{ esc_html(settings.wsae_btn_text) }}}</button></a>
+                        <# }
+                    }
+                    #>
+            </div>
+		<?php
+    }    
 }
 
 \Elementor\Plugin::instance()->widgets_manager->register_widget_type(new WSAE_Widget());

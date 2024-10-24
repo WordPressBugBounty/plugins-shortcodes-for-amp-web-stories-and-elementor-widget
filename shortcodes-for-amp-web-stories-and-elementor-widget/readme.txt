@@ -2,10 +2,10 @@
 Contributors:narinder-singh,satindersingh,coolplugins
 Donate link: https://paypal.me/CoolPlugins/10USD/
 Tags: web stories,amp stories,story,shortcode, elementor widgets, accelerated mobile pages,google
-Requires at least:4.5
-Tested up to:6.0.3
+Requires at least:5.0
+Tested up to:6.6
 Requires PHP:5.6
-Stable tag:1.1
+Stable tag:1.2.1
 License:GPLv2 or later
 License URI:http://www.gnu.org/licenses/gpl-2.0.html
  
@@ -57,8 +57,24 @@ This plugin is not developed by or affiliated with Web story or Google in any wa
 2. Activate the plugin through **Plugins >> Installed Plugin** menu in WordPress
 3. After plugin activation, you can find Web Stories Widgets For Elementor in the plugin Section.
 
-
 == Changelog ==
+<strong>Version 1.2.1 |  24/10/2024</strong>
+<pre>
+Improved: Minor changes.
+</pre>
+
+<strong>Version 1.2.0 |  24/10/2024</strong>
+<pre>
+Added: New Circle style option added in the Elementor widget.
+Improved: Shortcode new style attributes added.
+Tested with: Web Stories V1.37 and Elementor V3.24.5
+</pre>
+
+<strong>Version 1.1.1 |  10/10/2024</strong>
+<pre>
+Fixed: Resolved security issues.
+</pre>
+
 <strong>Version 1.1 |  31/10/2022</strong>
 <pre>
 Added: Story height setting in elementor widget.
