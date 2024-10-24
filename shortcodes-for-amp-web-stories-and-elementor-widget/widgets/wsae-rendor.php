@@ -10,7 +10,6 @@ $current_post = get_post($singlid);
 $story = new Story();
 $story->load_from_post($current_post);
 
-// var_dump($postrurl); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 $args = '';
 $html = '';
 
@@ -40,15 +39,27 @@ if (
     
 }
 
-$html .= '   <div class="wsae-wrapper wp-block-web-stories-embed ' . esc_attr($align) . '">
-                <amp-story-player class="wsae-amp" >
-                    <a href="' . esc_url($url) . '" style="' . esc_attr($poster_style) . '">' . esc_html($title) . '</a>
-                </amp-story-player>
-                <a href="' . esc_url($url) . '" >
-                  <button class="wae_btn_setting" style="display:' . esc_attr($showbtn) . ';">' . esc_html($settings['wsae_btn_text']) . '</button>
-                </a>
-            </div>';
+$imageSrc = esc_url($poster);
+$wsae_circle = $settings['wsae_style'] == "circle" ? 'wsae_circle' : '';
+if(esc_url($poster) == ""){
+$imageSrc = esc_url(WSAE_URL . 'assets/images/default_poster.png');
+}
 
-
-
+$html .= '<div class="wsae-wrapper wp-block-web-stories-embed ' . esc_attr($wsae_circle) . ' ' . esc_attr($align) . '">';
+if($settings['wsae_style'] == "circle"){
+    $html .= '   <a href="' . esc_url($url) . '" style="text-decoration:none;"> 
+    <div class="borderDiv">
+    <img src="' . esc_url($imageSrc) . '" alt="' . esc_attr($title) . '" >
+    </div>';
+    $html .= '</a>';
+}else{
+    $html .= '      <amp-story-player class="wsae-amp" >
+                        <a href="' . esc_url($url) . '" style="' . esc_attr($poster_style) . '">' . esc_html($title) . '</a>
+                    </amp-story-player>
+                    <a href="' . esc_url($url) . '" >
+                      <button class="wae_btn_setting" style="display:' . esc_attr($showbtn) . ';">' . esc_html($settings['wsae_btn_text']) . '</button>
+                    </a>';
+                }
+$html .= ' </div>';
+            
 echo $html;

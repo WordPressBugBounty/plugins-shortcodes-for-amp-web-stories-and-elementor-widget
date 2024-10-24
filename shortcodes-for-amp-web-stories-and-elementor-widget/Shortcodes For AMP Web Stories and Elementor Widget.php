@@ -1,12 +1,12 @@
 <?php
 /**
  * Plugin Name: Web Stories Widgets For Elementor
- * Description: Web Stories Shortcodes for recent Story [Recent-stories column="3" show-button="yes" show-no-of-story="all" button-text="View" order="DESC" btn-color=" " btn-text-color=""].
+ * Description: Web Stories Shortcodes for recent Story [Recent-stories column="3" show-button="yes" show-no-of-story="all" button-text="View" order="DESC" btn-color="#0063a6" btn-text-color="#f6f3ef" style="default" border-color="#BA0109" border-width="1px"].
  * Plugin URI:  https://coolplugins.net
- * Version:     1.1.1
+ * Version:     1.2.0
  * Author:      Cool Plugins
  * Author URI:  https://coolplugins.net/
- * Text Domain: WSAE
+ * Text Domain: WSAE    
  * Elementor tested up to: 3.24.5
 */
 
@@ -20,7 +20,7 @@ if (defined('WSAE_VERSION')) {
     return;
 }
 
-define('WSAE_VERSION', '1.1.1');
+define('WSAE_VERSION', '1.2.0');
 define('WSAE_FILE', __FILE__);
 define('WSAE_PATH', plugin_dir_path(WSAE_FILE));
 define('WSAE_URL', plugin_dir_url(WSAE_FILE));
@@ -102,42 +102,51 @@ final class Webstory_Widget_Addon
         wp_enqueue_style('standalone-custom-style', WSAE_URL . 'assets/css/wsae-custom-styl.css');
 
          $atts = shortcode_atts( array( 
-             
              'column'=>'3',
              'show-no-of-story'=>'all',
              'show-button'=>'yes',
              'button-text'=>'Default view',
              'order'=>'DESC',
-             'btn-color'=>'',
-             'btn-text-color'=>'#000',
+             'btn-color'=>'#046bd2',
+             'btn-text-color'=>' #ffffff',
+             'style'=> 'default',
+             'border-color'=>'none',
+             'border-width'=>'0px',
 
          ), $atts, 'wsae' );
 
-         // Sanitize the values
-        $atts['column'] = intval($atts['column']); // Ensure column is an integer
-        if (is_numeric($atts['show-no-of-story'])) {
-            $atts['show-no-of-story'] = intval($atts['show-no-of-story']); // Sanitize as integer
-        } else {
-            $atts['show-no-of-story'] = sanitize_text_field($atts['show-no-of-story']); // Sanitize as string (e.g., 'all')
-        }
-        $atts['show-button'] = sanitize_text_field($atts['show-button']);
-        $atts['button-text'] = sanitize_text_field($atts['button-text']);
-        $atts['order'] = sanitize_text_field($atts['order']);
-        // $atts['btn-color'] = sanitize_hex_color($atts['btn-color']); // For color codes
-        // $atts['btn-text-color'] = sanitize_hex_color($atts['btn-text-color']); // For color codes
+            // Sanitize the values
+            $atts['column'] = intval($atts['column']); // Ensure column is an integer
+            if (is_numeric($atts['show-no-of-story'])) {
+                $atts['show-no-of-story'] = intval($atts['show-no-of-story']); // Sanitize as integer
+            } else {
+                $atts['show-no-of-story'] = sanitize_text_field($atts['show-no-of-story']); // Sanitize as string (e.g., 'all')
+            }
+            $atts['show-button'] = sanitize_text_field($atts['show-button']);
+            $atts['button-text'] = sanitize_text_field($atts['button-text']);
+            $atts['order'] = sanitize_text_field($atts['order']);
+            $atts['style'] = sanitize_text_field($atts['style']);
+            $atts['border-width'] = sanitize_text_field($atts['border-width']);
 
-           // Sanitize colors using a similar approach
-        if (sanitize_hex_color($atts['btn-color'])) {
-            $atts['btn-color'] = sanitize_hex_color($atts['btn-color']); // Valid hex color
-        } else {
-            $atts['btn-color'] = sanitize_text_field($atts['btn-color']); // Sanitize as string
-        }
-        
-        if (sanitize_hex_color($atts['btn-text-color'])) {
-            $atts['btn-text-color'] = sanitize_hex_color($atts['btn-text-color']); // Valid hex color
-        } else {
-            $atts['btn-text-color'] = sanitize_text_field($atts['btn-text-color']); // Sanitize as string
-        }
+            // Sanitize colors using a similar approach
+            if (sanitize_hex_color($atts['btn-color'])) {
+                $atts['btn-color'] = sanitize_hex_color($atts['btn-color']); // Valid hex color
+            } else {
+                $atts['btn-color'] = sanitize_text_field($atts['btn-color']); // Sanitize as string
+            }
+            
+            if (sanitize_hex_color($atts['btn-text-color'])) {
+                $atts['btn-text-color'] = sanitize_hex_color($atts['btn-text-color']); // Valid hex color
+            } else {
+                $atts['btn-text-color'] = sanitize_text_field($atts['btn-text-color']); // Sanitize as string
+            }
+
+            if (sanitize_hex_color($atts['border-color'])) {
+                $atts['border-color'] = sanitize_hex_color($atts['border-color']); // Valid hex color
+            } else {
+                $atts['border-color'] = sanitize_text_field($atts['border-color']); // Sanitize as string
+            }
+
          $html = '';
 
          
@@ -155,17 +164,28 @@ final class Webstory_Widget_Addon
         wp_enqueue_style('standalone-custom-style', WSAE_URL . 'assets/css/wsae-custom-styl.css');
 
          $atts = shortcode_atts( array(
-             'id'=>'', 
-             'show-button'=>'yes',            
-             'button-text'=>'Default view',             
-             
-
+            'id'=>'', 
+            'show-button'=>'yes',            
+            'button-text'=>'Default view',             
+            'style'=> 'default',
+            'border-color'=>'none',
+            'border-width'=>'0px',
+        
          ), $atts, 'wsae' );
 
           // Sanitize attributes
-        $atts['id'] = intval($atts['id']); // Expecting 'id' to be numeric
-        $showbtn = ($atts['show-button'] === "yes") ? 'block' : 'none';
-        $atts['button-text'] = sanitize_text_field($atts['button-text']);
+          $atts['id'] = intval($atts['id']); // Expecting 'id' to be numeric
+          $showbtn = ($atts['show-button'] === "yes") ? 'block' : 'none';
+          $atts['button-text'] = sanitize_text_field($atts['button-text']);
+          $atts['style'] = sanitize_text_field($atts['style']);
+          $atts['border-width'] = sanitize_text_field($atts['border-width']);
+          
+          // Add sanitization for border color
+          if (sanitize_hex_color($atts['border-color'])) {
+              $atts['border-color'] = sanitize_hex_color($atts['border-color']); // Valid hex color
+          } else {
+              $atts['border-color'] = sanitize_text_field($atts['border-color']); // Sanitize as string
+          }
 
          $html = '';
         
@@ -193,23 +213,34 @@ final class Webstory_Widget_Addon
         $margin       = ( 'center' === $args['align'] ) ? 'auto' : '0';
         $player_style = sprintf( 'width: %dpx;height: %dpx;margin: %s', absint( $args['width'] ), absint( $args['height'] ), esc_attr( $margin ) );
         $poster_style = ! empty( $poster ) ? sprintf( '--story-player-poster: url(%s)', $poster ) : '';
+        $borderWidth = $atts['border-width'];
+        $borderWidthValue = (int) $borderWidth;
+        // $wsae_circle = $atts['style'] == "circle" ? 'wsae_circle' : '';
+        $imageSrc = esc_url($poster);
+        if($poster == ""){
+        $imageSrc = esc_url(WSAE_URL . 'assets/images/default_poster.png');
+        }
 
         if (
             ( function_exists( 'amp_is_request' ) && amp_is_request() ) ||
             ( function_exists( 'is_amp_endpoint' ) && is_amp_endpoint() )
-        ) {
-            $player_style = sprintf( 'margin: %s', esc_attr( $margin ) );            
-          }
-       
-            $html.='   <div class="wp-block-web-stories-embed '.esc_attr( $align ).'">
-                        <amp-story-player width="'.esc_attr( $args['width'] ).'" height="'.esc_attr( $args['height'] ).'" style="'.esc_attr( $player_style ).'">
-                             <a href="'. esc_url( $url ).'" style="'.esc_attr( $poster_style ).'">'.esc_html( $title ).'</a>
-                         </amp-story-player>
-                            <a href="' . esc_url($url) . '" ><button class="wae_btn_setting" style="display:'. esc_attr($showbtn) .';">'. esc_html($atts['button-text']) .'</button></a>
-                       </div>';
-         
-
+            ) {
+                $player_style = sprintf( 'margin: %s', esc_attr( $margin ) );            
+            }
             
+            if($atts['style'] === 'circle'){
+            $html.='   <div class="wp-block-web-stories-embed '.esc_attr( $align ).'">';
+            $html.='   <a href="' . esc_url($url) . '" style="text-decoration:none;"> <img src="' . esc_url($imageSrc) . '" alt="' . esc_attr($title) . '" style="width:100px; height:100px; border-radius:50%; border:'.esc_attr($borderWidthValue).'px solid '. esc_attr($atts['border-color']).';">
+            </a>';
+            $html.=' </div>';
+       }else{
+            $html.='   <div class="wp-block-web-stories-embed '.esc_attr( $align ).'">';
+            $html.='<amp-story-player width="'.esc_attr( $args['width'] ).'" height="'.esc_attr( $args['height'] ).'" style="'.esc_attr( $player_style ).'">
+                        <a href="'. esc_url( $url ).'" style="'.esc_attr( $poster_style ).'">'.esc_html( $title ).'</a>
+                    </amp-story-player>
+                    <a href="' . esc_url($url) . '" ><button class="wae_btn_setting" style="display:'. esc_attr($showbtn) .';">'. esc_html($atts['button-text']) .'</button></a>';
+            $html.=' </div>';
+          }
         
         return $html;
 
