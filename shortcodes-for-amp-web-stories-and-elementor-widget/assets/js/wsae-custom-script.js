@@ -21,12 +21,13 @@ class wsaeWidgetClass extends elementorModules.frontend.handlers.Base {
     var slector = this.elements.$ampWrapper;
     var ampSelector = this.elements.$ampSelector;
  
-    if(ampSelector.length>0){    
+    if(slector.length>0){    
       var player = new AmpStoryPlayer(window, ampSelector[0]);
       player.load();
     }
   
-  }    
+  }  
+  
 }
 
 

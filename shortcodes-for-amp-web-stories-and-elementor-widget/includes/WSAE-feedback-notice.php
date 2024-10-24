@@ -123,7 +123,7 @@ if (!class_exists('WSAEFeedbackNotice')) {
         $ajax_callback='wsae_dismiss_notice';
         $wrap_cls="notice notice-info is-dismissible";
         $img_path=WSAE_URL.'assets/images/webstory.png';
-        $p_name="Web Stories Widgets For Elementor";
+        $p_name="Shortcodes For Web Stories & Elementor";
         $like_it_text='Rate Now! ★★★★★';
         $already_rated_text=esc_html__( 'I already rated it', 'cool-timeline' );
         $not_interested=esc_html__( 'Not Interested', 'ect' );
