@@ -3,9 +3,9 @@ Contributors:narinder-singh,satindersingh,coolplugins
 Donate link: https://paypal.me/CoolPlugins/10USD/
 Tags: web stories,amp stories,story,shortcode, elementor widgets, accelerated mobile pages,google
 Requires at least:5.0
-Tested up to:6.6
+Tested up to:6.8.1
 Requires PHP:5.6
-Stable tag:1.2.1
+Stable tag:1.2.2
 License:GPLv2 or later
 License URI:http://www.gnu.org/licenses/gpl-2.0.html
  
@@ -58,6 +58,12 @@ This plugin is not developed by or affiliated with Web story or Google in any wa
 3. After plugin activation, you can find Web Stories Widgets For Elementor in the plugin Section.
 
 == Changelog ==
+<strong>Version 1.2.2 |  12/05/2025</strong>
+<pre>
+Tested Up To: WordPress 6.8.1.
+Tested Up To: Elementor 3.28.4.
+</pre>
+
 <strong>Version 1.2.1 |  24/10/2024</strong>
 <pre>
 Improved: Minor changes.
