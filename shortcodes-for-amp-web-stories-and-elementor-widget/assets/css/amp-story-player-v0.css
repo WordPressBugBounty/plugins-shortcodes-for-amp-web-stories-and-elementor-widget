@@ -15,7 +15,7 @@ amp-story-player a:not(:first-of-type) {
   visibility: hidden;
 }
 amp-story-player .wae_btn_setting {
-    max-width: 150px !important;
+  max-width: 150px !important;
 }
 amp-story-player:after {
   content: " ";
@@ -64,4 +64,3 @@ amp-story-player:after {
 .i-amphtml-story-player-loaded:after {
   visibility: hidden;
 }
-/*# sourceURL=/css/amp-story-player.css*/

@@ -3,7 +3,7 @@
  * Plugin Name: Web Stories Widgets For Elementor
  * Description: Web Stories Shortcodes for recent Story [Recent-stories column="3" show-button="yes" show-no-of-story="all" button-text="View" order="DESC" btn-color="#0063a6" btn-text-color="#f6f3ef" style="default" border-color="#BA0109" border-width="1px"].
  * Plugin URI:  https://coolplugins.net
- * Version:     1.2.2
+ * Version:     1.2.4
  * Author:      Cool Plugins
  * Author URI:  https://coolplugins.net/
  * Text Domain: WSAE    
@@ -20,7 +20,7 @@ if (defined('WSAE_VERSION')) {
     return;
 }
 
-define('WSAE_VERSION', '1.2.2');
+define('WSAE_VERSION', '1.2.4');
 define('WSAE_FILE', __FILE__);
 define('WSAE_PATH', plugin_dir_path(WSAE_FILE));
 define('WSAE_URL', plugin_dir_url(WSAE_FILE));
@@ -150,9 +150,7 @@ final class Webstory_Widget_Addon
          $html = '';
 
          
-        // if ( ! class_exists( '\Google\Web_Stories\Plugin' ) ) {
-        //     return;
-        //     }
+       
 
             require WSAE_PATH . 'includes/wsae-recent-story.php';
             return $html;
@@ -270,7 +268,7 @@ final class Webstory_Widget_Addon
       
           if( is_admin() ){
 			
-			require_once(__DIR__ . '/includes/WSAE-feedback-notice.php');
+			require_once(__DIR__ . '/admin/feedback/wsae-feedback-notice.php');
 			new WSAEFeedbackNotice();
 			
 			}
