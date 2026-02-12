@@ -6,7 +6,7 @@ Tags: web stories,amp stories,story,shortcode, elementor widgets, accelerated mo
 Requires at least:5.0
 Tested up to:6.9
 Requires PHP:5.6
-Stable tag:1.2.4
+Stable tag:1.2.5
 License:GPLv2 or later
 License URI:http://www.gnu.org/licenses/gpl-2.0.html
  
@@ -63,6 +63,7 @@ This plugin is not created by or associated with **Web Stories** or **Google**. 
 
 You must install the **Web Stories plugin** to use this addon.
 
+**Use of 3rd Party Services:** This plugin connects to the Cool Plugins feedback server only for optional usage data sharing and voluntary feedback submission (for example, during plugin deactivation). Data is transmitted solely after explicit user consent. No hidden tracking is performed, and no frontend visitor or site user data is collected.  For more details, please review our [Data Usage Policy](https://my.coolplugins.net/terms/usage-tracking/), [TOS](https://my.coolplugins.net/terms/), and [Privacy Policy](https://my.coolplugins.net/terms/privacy-policy/).
 
 == Installation ==
 
@@ -97,6 +98,9 @@ Make sure that:
 You can report security bugs through the Patchstack Vulnerability Disclosure Program. The Patchstack team help validate, triage and handle any security vulnerabilities **[Report a security vulnerability](https://patchstack.com/database/vdp/template-events-calendar)**.
 
 == Changelog ==
+
+= Version 1.2.5 | 12/02/2026 =
+* Tested Up To: Elementor 3.35.4
 
 = Version 1.2.4 | 18/12/2025 =
 * Improved: Rating Div Styling.
