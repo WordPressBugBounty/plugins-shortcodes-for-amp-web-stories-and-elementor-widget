@@ -2,11 +2,11 @@
 
 Contributors:narinder-singh,satindersingh,coolplugins
 Donate link: https://paypal.me/CoolPlugins/10USD/
-Tags: web stories,amp stories,story,shortcode, elementor widgets, accelerated mobile pages,google
+Tags: web stories,amp stories,shortcode, elementor widgets,google
 Requires at least:5.0
 Tested up to:6.9
 Requires PHP:5.6
-Stable tag:1.2.5
+Stable tag:1.2.6
 License:GPLv2 or later
 License URI:http://www.gnu.org/licenses/gpl-2.0.html
  
@@ -49,6 +49,9 @@ https://youtu.be/FGNh_hkRvZI
 
 * Fully Responsive.
 
+**Use of 3rd Party Services:** This plugin connects to the Cool Plugins feedback server only for optional usage data sharing and voluntary feedback submission (for example, during plugin deactivation). Data is transmitted solely after explicit user consent. No hidden tracking is performed, and no frontend visitor or site user data is collected.  For more details, please review our [Data Usage Policy](https://my.coolplugins.net/terms/usage-tracking/), [TOS](https://my.coolplugins.net/terms/), and [Privacy Policy](https://my.coolplugins.net/terms/privacy-policy/).
+
+
 == Screenshots ==
 
 1. Web Stories – Layout View
@@ -62,8 +65,6 @@ https://youtu.be/FGNh_hkRvZI
 This plugin is not created by or associated with **Web Stories** or **Google**. It is an independent addon that only extends the **Web Stories plugin**.
 
 You must install the **Web Stories plugin** to use this addon.
-
-**Use of 3rd Party Services:** This plugin connects to the Cool Plugins feedback server only for optional usage data sharing and voluntary feedback submission (for example, during plugin deactivation). Data is transmitted solely after explicit user consent. No hidden tracking is performed, and no frontend visitor or site user data is collected.  For more details, please review our [Data Usage Policy](https://my.coolplugins.net/terms/usage-tracking/), [TOS](https://my.coolplugins.net/terms/), and [Privacy Policy](https://my.coolplugins.net/terms/privacy-policy/).
 
 == Installation ==
 
@@ -98,6 +99,11 @@ Make sure that:
 You can report security bugs through the Patchstack Vulnerability Disclosure Program. The Patchstack team help validate, triage and handle any security vulnerabilities **[Report a security vulnerability](https://patchstack.com/database/vdp/template-events-calendar)**.
 
 == Changelog ==
+
+= Version 1.2.6 | 23/02/2026 =
+* Tested Up To: Elementor 3.35.5
+* Improved: Standardized text domain across plugin.
+* Fixed : Fixed issues reported by “Plugin Check” plugin.
 
 = Version 1.2.5 | 12/02/2026 =
 * Tested Up To: Elementor 3.35.4
@@ -137,9 +143,8 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * New: Initial plugin release.
 
 == Upgrade Notice ==
-= Version 2.4.7 | June 10, 2025 =
-* Added: User opt-in option in plugin.
-* Improved: Minor code improvements.
-* Tested The Events Calendar V6.13.2.1. 
-
+= Version 1.2.6 | 23/02/2026 =
+* Tested Up To: Elementor 3.35.5
+* Improved: Standardized text domain across plugin.
+* Fixed : Fixed issues reported by “Plugin Check” plugin.
 

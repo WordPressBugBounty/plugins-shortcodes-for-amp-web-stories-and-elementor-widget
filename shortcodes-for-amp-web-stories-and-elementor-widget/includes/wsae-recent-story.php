@@ -2,6 +2,13 @@
 
 use Google\Web_Stories\Story_Renderer\HTML;
 use Google\Web_Stories\Model\Story;
+
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly
+}
+
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
+
 $checknoof = ($atts['show-no-of-story'] !== 'all') ? $atts['show-no-of-story'] : -1;
 
 $defaults = array(
@@ -89,4 +96,6 @@ if(  $atts['style'] === 'circle'){
 $html.=' </div>';
 }
 
-$html.='</div>';
+$html.='</div>';  
+
+// phpcs:enable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound

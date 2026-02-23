@@ -14,8 +14,8 @@ class WSAE_Widget extends Widget_Base
     {
         parent::__construct($data, $args);
        
-      wp_register_script('standalone-custom-script', WSAE_URL . 'assets/js/wsae-custom-script.js', ['elementor-frontend','jquery'], null, true);
-      wp_register_style('standalone-custom-style', WSAE_URL . 'assets/css/wsae-custom-styl.css');
+      wp_register_script('standalone-custom-script', WSAE_URL . 'assets/js/wsae-custom-script.js', ['elementor-frontend','jquery'], WSAE_VERSION, true);
+      wp_register_style('standalone-custom-style', WSAE_URL . 'assets/css/wsae-custom-styl.css', [], WSAE_VERSION);
     }
 
     public function get_script_depends()
@@ -38,7 +38,7 @@ class WSAE_Widget extends Widget_Base
 
     public function get_title()
     {
-        return __('Web Stories Widget', 'WSAE');
+        return __('Web Stories Widget', 'shortcodes-for-amp-web-stories-and-elementor-widget');
     }
 
     public function get_icon()
@@ -83,15 +83,15 @@ class WSAE_Widget extends Widget_Base
                 }
                 
                 if(empty($post_names)){
-                    $post_names['select'] = esc_html__( 'You have no story to show', 'WSAE' ); // Escape static text
+                    $post_names['select'] = esc_html__( 'You have no story to show', 'shortcodes-for-amp-web-stories-and-elementor-widget' ); // Escape static text
                 }              
 
-                $defal_select = isset( $the_query[0]->post_title ) ? esc_html( $the_query[0]->post_title ) : esc_html__( 'select', 'WSAE' ); // Escape default select text
+                $defal_select = isset( $the_query[0]->post_title ) ? esc_html( $the_query[0]->post_title ) : esc_html__( 'select', 'shortcodes-for-amp-web-stories-and-elementor-widget' ); // Escape default select text
 
             $this->start_controls_section(
             'WSAE_layout_section',
             [
-                'label' => __('Layout Settings', 'WSAE'),
+                'label' => __('Layout Settings', 'shortcodes-for-amp-web-stories-and-elementor-widget'),
                 'tab' => Controls_Manager::TAB_CONTENT,
             ]
         );
@@ -99,7 +99,7 @@ class WSAE_Widget extends Widget_Base
         $this->add_control(
             'wsae_layout',
             [
-                'label' => __('Select story', 'WSAE'),
+                'label' => __('Select story', 'shortcodes-for-amp-web-stories-and-elementor-widget'),
                 'type' => Controls_Manager::SELECT,
                 'default' => $defal_select ,
                 'options' => $post_names,
@@ -109,12 +109,12 @@ class WSAE_Widget extends Widget_Base
         $this->add_control(
             'wsae_style',
             [
-                'label' => __('Style', 'WSAE'),
+                'label' => __('Style', 'shortcodes-for-amp-web-stories-and-elementor-widget'),
                 'type' => Controls_Manager::SELECT,
                 'default' => 'default',
                 'options' => [
-                    'default'=>  esc_html__('Default','WSAE'),
-                    'circle'=>  esc_html__('Circle','WSAE'),
+                    'default'=>  esc_html__('Default','shortcodes-for-amp-web-stories-and-elementor-widget'),
+                    'circle'=>  esc_html__('Circle','shortcodes-for-amp-web-stories-and-elementor-widget'),
                 ],
             ]
         );
@@ -122,7 +122,7 @@ class WSAE_Widget extends Widget_Base
         $this->add_control(
             'wsae_story_height',
             [
-                'label' => esc_html__('Story Height', 'WSAE'),
+                'label' => esc_html__('Story Height', 'shortcodes-for-amp-web-stories-and-elementor-widget'),
                 'type' => \Elementor\Controls_Manager::SLIDER,
                 'size_units' => ['px'],
                 'range' => [
@@ -144,10 +144,10 @@ class WSAE_Widget extends Widget_Base
         $this->add_control(
 			'wsae_button',
 			[
-				'label' => __( 'Show Button', 'WSAE'),
+				'label' => __( 'Show Button', 'shortcodes-for-amp-web-stories-and-elementor-widget'),
 				'type' => Controls_Manager::SWITCHER,
-				'label_on' => __( 'Show', 'WSAE'),
-				'label_off' => __( 'Hide', 'WSAE'),
+				'label_on' => __( 'Show', 'shortcodes-for-amp-web-stories-and-elementor-widget'),
+				'label_off' => __( 'Hide', 'shortcodes-for-amp-web-stories-and-elementor-widget'),
 				'return_value' => 'yes',
 				'default' => 'no',
                 'condition' => [
@@ -160,10 +160,10 @@ class WSAE_Widget extends Widget_Base
         $this->add_control(
 			'wsae_btn_text',
 			[
-				'label' => __( 'Button text', 'WSAE' ),
+				'label' => __( 'Button text', 'shortcodes-for-amp-web-stories-and-elementor-widget' ),
 				'type' => Controls_Manager::TEXT,
-				'default' => __( 'View', 'WSAE' ),
-				'placeholder' => __( 'Enter text for button', 'WSAE' ),
+				'default' => __( 'View', 'shortcodes-for-amp-web-stories-and-elementor-widget' ),
+				'placeholder' => __( 'Enter text for button', 'shortcodes-for-amp-web-stories-and-elementor-widget' ),
                 'sanitize_callback' => 'sanitize_text_field',
                 'condition' => [
                     'wsae_button' => 'yes',
@@ -177,7 +177,7 @@ class WSAE_Widget extends Widget_Base
 			\Elementor\Group_Control_Typography::get_type(),
 			[
 				'name' => 'content_typography',
-				'label' => __( 'Button Typography', 'WSAE' ),
+				'label' => __( 'Button Typography', 'shortcodes-for-amp-web-stories-and-elementor-widget' ),
 				'type' => \Elementor\Group_Control_Typography::get_type(),
 				'selector' => '{{WRAPPER}} .wae_btn_setting',
                 'condition' => [
@@ -189,7 +189,7 @@ class WSAE_Widget extends Widget_Base
         $this->add_control(
             'wsae_button_text_color',
             array(
-                'label' => __('Button Text Color', 'WSAE'),
+                'label' => __('Button Text Color', 'shortcodes-for-amp-web-stories-and-elementor-widget'),
                 'type' => Controls_Manager::COLOR,
                 'selectors' => array('{{WRAPPER}} .wae_btn_setting' => 'color: {{VALUE}} !important',
                 ),
@@ -203,7 +203,7 @@ class WSAE_Widget extends Widget_Base
         $this->add_control(
             'wsae_button_color',
             array(
-                'label' => __('Button Background', 'WSAE'),
+                'label' => __('Button Background', 'shortcodes-for-amp-web-stories-and-elementor-widget'),
                 'type' => Controls_Manager::COLOR,
                 'selectors' => array('{{WRAPPER}} .wae_btn_setting' => 'background-color: {{VALUE}} !important',
                 ),
@@ -217,7 +217,7 @@ class WSAE_Widget extends Widget_Base
         $this->add_control(
             'wsae_border_width',
             array(
-                'label' => __('Border Width', 'WSAE'),
+                'label' => __('Border Width', 'shortcodes-for-amp-web-stories-and-elementor-widget'),
                 'type' => \Elementor\Controls_Manager::SLIDER,
                 'size_units' => ['px'],
                 'default' => [
@@ -243,7 +243,7 @@ class WSAE_Widget extends Widget_Base
         $this->add_control(
             'wsae_border_padding',
             array(
-                'label' => __('Padding', 'WSAE'),
+                'label' => __('Padding', 'shortcodes-for-amp-web-stories-and-elementor-widget'),
                 'type' => \Elementor\Controls_Manager::SLIDER,
                 'size_units' => ['px'],
                 'default' => [
@@ -270,16 +270,16 @@ class WSAE_Widget extends Widget_Base
         $this->add_control(
             'wsae_border_color_type',
             array(
-                'label' => __('Border Color Type', 'WSAE'),
+                'label' => __('Border Color Type', 'shortcodes-for-amp-web-stories-and-elementor-widget'),
                 'type' => Controls_Manager::CHOOSE,
                 'default' => 'gradient', // or 'gradient'
                 'options' => array(
                     'simple'     => array(
-                        'title' => esc_html__( 'Simple', 'WSAE' ),
+                        'title' => esc_html__( 'Simple', 'shortcodes-for-amp-web-stories-and-elementor-widget' ),
                         'icon'  => 'eicon-paint-brush',
                     ),
                     'gradient'   => array(
-                        'title' => esc_html__( 'Gradient', 'WSAE' ),
+                        'title' => esc_html__( 'Gradient', 'shortcodes-for-amp-web-stories-and-elementor-widget' ),
                         'icon'  => 'eicon-barcode',
                     )),
                 'condition' => [
@@ -292,7 +292,7 @@ class WSAE_Widget extends Widget_Base
         $this->add_control(
             'wsae_primary_border_color',
             array(
-                'label'     => esc_html__( 'Primary Border Color', 'WSAE' ),
+                'label'     => esc_html__( 'Primary Border Color', 'shortcodes-for-amp-web-stories-and-elementor-widget' ),
                 'type'      => \Elementor\Controls_Manager::COLOR,
                 'default' => '#F01111', 
                 'selectors' => array(
@@ -309,7 +309,7 @@ class WSAE_Widget extends Widget_Base
         $this->add_control(
             'wsae_secondary_border_color',
             array(
-                'label'     => esc_html__( 'Secondary Border Color', 'WSAE' ),
+                'label'     => esc_html__( 'Secondary Border Color', 'shortcodes-for-amp-web-stories-and-elementor-widget' ),
                 'type'      => \Elementor\Controls_Manager::COLOR,
                 'default' => '#800080', 
                 'selectors' => array(
@@ -325,7 +325,7 @@ class WSAE_Widget extends Widget_Base
        $this->add_control(
 			'wsae_ids',
 			[
-				'label' => __( 'post ids', 'WSAE'),
+				'label' => __( 'post ids', 'shortcodes-for-amp-web-stories-and-elementor-widget'),
 				'type' => Controls_Manager::HIDDEN,
 				'default' => $post_idss,
 			]
@@ -348,7 +348,7 @@ class WSAE_Widget extends Widget_Base
        $settings = $this->get_settings_for_display();
 	   $singlid='';
 	   if($settings['wsae_layout']=='select'){
-        echo esc_html__('You have no story to show', 'WSAE');
+        echo esc_html__('You have no story to show', 'shortcodes-for-amp-web-stories-and-elementor-widget');
         return;
        }
        else{
@@ -406,7 +406,7 @@ class WSAE_Widget extends Widget_Base
         })
         if (settings.wsae_layout == 'select') {
                 #>
-                <span><?php echo esc_html__('You have no story to show', 'WSAE'); ?></span>
+                <span><?php echo esc_html__('You have no story to show', 'shortcodes-for-amp-web-stories-and-elementor-widget'); ?></span>
                 <#
             } else {
                 function esc_html(str) {

@@ -5,12 +5,15 @@ if (!defined('ABSPATH')) {
 use Google\Web_Stories\Story_Renderer\HTML;
 use Google\Web_Stories\Model\Story;
 
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
+
 $current_post = get_post($singlid);
 
 $story = new Story();
 $story->load_from_post($current_post);
 
 $args = '';
+
 $html = '';
 
 $showbtn = ($settings['wsae_button'] == "yes") ? 'block' : 'none';
@@ -62,4 +65,6 @@ if($settings['wsae_style'] == "circle"){
                 }
 $html .= ' </div>';
             
-echo $html;
+echo $html;  // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+
+// phpcs:enable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound

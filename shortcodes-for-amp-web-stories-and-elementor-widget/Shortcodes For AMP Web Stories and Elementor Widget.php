@@ -1,13 +1,15 @@
 <?php
 /**
  * Plugin Name: Web Stories Widgets For Elementor
- * Description: Web Stories Shortcodes for recent Story [Recent-stories column="3" show-button="yes" show-no-of-story="all" button-text="View" order="DESC" btn-color="#0063a6" btn-text-color="#f6f3ef" style="default" border-color="#BA0109" border-width="1px"].
+ * Description: Web Stories Shortcodes for recent Story [Recent-stories column="3" show-button="yes"     show-no-of-story="all" button-text="View" order="DESC" btn-color="#0063a6" btn-text-color="#f6f3ef" style="default" border-color="#BA0109" border-width="1px"].
  * Plugin URI:  https://coolplugins.net
- * Version:     1.2.5
+ * Version:     1.2.6
  * Author:      Cool Plugins
  * Author URI:  https://coolplugins.net/
- * Text Domain: WSAE    
- * Elementor tested up to: 3.35.4
+ * Text Domain: shortcodes-for-amp-web-stories-and-elementor-widget   
+ * License:GPLv2 or later
+ * License URI:http://www.gnu.org/licenses/gpl-2.0.html
+ * Elementor tested up to: 3.35.5
 */
 
 use Google\Web_Stories\Story_Renderer\HTML;
@@ -20,7 +22,7 @@ if (defined('WSAE_VERSION')) {
     return;
 }
 
-define('WSAE_VERSION', '1.2.5');
+define('WSAE_VERSION', '1.2.6');
 define('WSAE_FILE', __FILE__);
 define('WSAE_PATH', plugin_dir_path(WSAE_FILE));
 define('WSAE_URL', plugin_dir_url(WSAE_FILE));
@@ -77,13 +79,13 @@ final class Webstory_Widget_Addon
     }
     function set_custom_edit_wsae_columns($columns) {
             
-            $columns['shortcode'] = __( 'Shortcode', 'WSAE' );
+            $columns['shortcode'] = __( 'Shortcode', 'shortcodes-for-amp-web-stories-and-elementor-widget' );
             
             return $columns;
         }
         function custom_wsae_column( $columns, $post_id ) {
             if($columns=='shortcode'){
-                echo '<code>[webstory id="'.$post_id.'"]</code>';
+                echo '<code>[webstory id="'.esc_attr($post_id).'"]</code>';
             }
         }    
 
@@ -95,11 +97,11 @@ final class Webstory_Widget_Addon
     public function wsae_recent_webstory_call($atts){
          // Load styles and scripts only if shortcodes are used in the content
         if (!class_exists('\Google\Web_Stories\Plugin')) {
-            return '<p>' . __('Error: Web Stories plugin is not activated.', 'WSAE') . '</p>';
+            return '<p>' . __('Error: Web Stories plugin is not activated.', 'shortcodes-for-amp-web-stories-and-elementor-widget') . '</p>';
         }
         wp_enqueue_style( 'wsae-standalone-amp-story-player-style' );
         wp_enqueue_script( 'wsae-standalone-amp-story-player-script' );
-        wp_enqueue_style('standalone-custom-style', WSAE_URL . 'assets/css/wsae-custom-styl.css');
+        wp_enqueue_style('standalone-custom-style', WSAE_URL . 'assets/css/wsae-custom-styl.css', [], WSAE_VERSION);
 
          $atts = shortcode_atts( array( 
              'column'=>'3',
@@ -159,7 +161,7 @@ final class Webstory_Widget_Addon
    public function wsae_webstory_call($atts){
         wp_enqueue_style( 'wsae-standalone-amp-story-player-style' );
         wp_enqueue_script( 'wsae-standalone-amp-story-player-script' );
-        wp_enqueue_style('standalone-custom-style', WSAE_URL . 'assets/css/wsae-custom-styl.css');
+        wp_enqueue_style('standalone-custom-style', WSAE_URL . 'assets/css/wsae-custom-styl.css', [], WSAE_VERSION);
 
          $atts = shortcode_atts( array(
             'id'=>'', 
@@ -260,8 +262,7 @@ final class Webstory_Widget_Addon
             return;
 
         }
-        load_plugin_textdomain('WSAE', false, WSAE_FILE . 'languages');
-	
+       
 		
 		// Require the main plugin file
       require( __DIR__ . '/includes/class-WSAE.php' );
@@ -281,7 +282,9 @@ final class Webstory_Widget_Addon
         
         if (!is_plugin_active( 'elementor/elementor.php' ) ) : ?>
 			<div class="notice notice-warning is-dismissible">
-				<p><?php echo sprintf( __( '<a href="%s"  target="_blank" >Elementor Page Builder</a>  must be installed and activated for "<strong>Shortcodes For AMP Web Stories and Elementor Widget</strong>" to work' ),'https://wordpress.org/plugins/elementor/'); ?></p>
+				<p><?php 
+				// translators: %s: URL to Elementor plugin page
+				echo wp_kses_post( sprintf( __( '<a href="%s"  target="_blank" >Elementor Page Builder</a>  must be installed and activated for "<strong>Shortcodes For AMP Web Stories and Elementor Widget</strong>" to work', 'shortcodes-for-amp-web-stories-and-elementor-widget' ), esc_url( 'https://wordpress.org/plugins/elementor/' ) ) ); ?></p>
 			</div>
         <?php endif;
         
@@ -291,7 +294,9 @@ final class Webstory_Widget_Addon
 
     if (current_user_can('activate_plugins')): ?>
 			<div class="notice notice-warning is-dismissible">
-				<p><?php echo sprintf(__('<a href="%s"  target="_blank" >Webstory</a>  must be installed and activated for "<strong>Shortcodes For AMP Web Stories and Elementor Widget</strong>" to work'), 'https://wordpress.org/plugins/web-stories/'); ?></p>
+				<p><?php 
+				// translators: %s: URL to Web Stories plugin page
+				echo wp_kses_post( sprintf( __( '<a href="%s"  target="_blank" >Webstory</a>  must be installed and activated for "<strong>Shortcodes For AMP Web Stories and Elementor Widget</strong>" to work', 'shortcodes-for-amp-web-stories-and-elementor-widget' ), esc_url( 'https://wordpress.org/plugins/web-stories/' ) ) ); ?></p>
 			</div>
         <?php endif;
 
@@ -303,7 +308,7 @@ final class Webstory_Widget_Addon
     {
         update_option("WSAE-v",WSAE_VERSION);
 		update_option("WSAE-type","FREE");
-		update_option("wsae-installDate",date('Y-m-d h:i:s') );
+		update_option("wsae-installDate",gmdate('Y-m-d h:i:s') );
     }
 
     /**

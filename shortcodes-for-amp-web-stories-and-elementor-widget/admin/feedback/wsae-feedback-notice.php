@@ -1,5 +1,9 @@
 <?php
 
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly
+}
+
 if (!class_exists("WSAEFeedbackNotice")) {
     class WSAEFeedbackNotice
     {
@@ -29,7 +33,7 @@ if (!class_exists("WSAEFeedbackNotice")) {
 
           
 
-          wp_register_style( 'wsae-feedback-style', WSAE_URL. 'admin/feedback/assests/css/wsae-feedback-style.css' );
+          wp_register_style( 'wsae-feedback-style', WSAE_URL. 'admin/feedback/assests/css/wsae-feedback-style.css', [], WSAE_VERSION );
 
 
             wp_register_script(
@@ -81,7 +85,7 @@ if (!class_exists("WSAEFeedbackNotice")) {
             }
 
             // grab plugin installation date and compare it with current date
-            $display_date = date("Y-m-d h:i:s");
+            $display_date = gmdate("Y-m-d h:i:s");
             $install_date = new DateTime($installation_date);
             $current_date = new DateTime($display_date);
             $difference = $install_date->diff($current_date);
@@ -91,6 +95,8 @@ if (!class_exists("WSAEFeedbackNotice")) {
             if (isset($diff_days) && $diff_days >= 3) {
                   wp_enqueue_script("wsae-feedback-script");
                  wp_enqueue_style('wsae-feedback-style');
+
+                 // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped	
                 echo $this->wsae_create_notice_content();
               
             }
@@ -104,15 +110,9 @@ if (!class_exists("WSAEFeedbackNotice")) {
             $wrap_cls = "notice notice-info is-dismissible";
             $p_name = "Web Stories Widgets For Elementor";
             $like_it_text = "Rate Now! ★★★★★";
-            $already_rated_text = esc_html__(
-                "I already rated it",
-                "cool-timeline"
-            );
-            $not_interested = esc_html__("Not Interested", "ect");
-            $not_like_it_text = esc_html__(
-                "No, not good enough, i do not like to rate it!",
-                "cool-timeline"
-            );
+            $already_rated_text = esc_html__("I already rated it",'shortcodes-for-amp-web-stories-and-elementor-widget');
+            $not_interested = esc_html__("Not Interested", 'shortcodes-for-amp-web-stories-and-elementor-widget');
+            $not_like_it_text = esc_html__(  "No, not good enough, i do not like to rate it!", 'shortcodes-for-amp-web-stories-and-elementor-widget');
             $p_link = esc_url(
                 "https://wordpress.org/plugins/shortcodes-for-amp-web-stories-and-elementor-widget/#reviews"
             );

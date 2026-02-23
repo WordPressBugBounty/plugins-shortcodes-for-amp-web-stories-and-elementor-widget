@@ -8,7 +8,7 @@ add_action("elementor/init", function () {
     \Elementor\Plugin::$instance->elements_manager->add_category(
         "wsae", // the name of the category
         [
-            "title" => esc_html__("Webstory Addon Widget", "wsae"),
+            "title" => esc_html__("Webstory Addon Widget", "shortcodes-for-amp-web-stories-and-elementor-widget"),
             "icon" => "fa fa-header", //default icon
         ],
         1
