@@ -3,13 +3,13 @@
  * Plugin Name: Web Stories Widgets For Elementor
  * Description: Web Stories Shortcodes for recent Story [Recent-stories column="3" show-button="yes"     show-no-of-story="all" button-text="View" order="DESC" btn-color="#0063a6" btn-text-color="#f6f3ef" style="default" border-color="#BA0109" border-width="1px"].
  * Plugin URI:  https://coolplugins.net
- * Version:     1.2.6
+ * Version:     1.2.7
  * Author:      Cool Plugins
  * Author URI:  https://coolplugins.net/
  * Text Domain: shortcodes-for-amp-web-stories-and-elementor-widget   
  * License:GPLv2 or later
  * License URI:http://www.gnu.org/licenses/gpl-2.0.html
- * Elementor tested up to: 3.35.5
+ * Elementor tested up to: 4.0.1
 */
 
 use Google\Web_Stories\Story_Renderer\HTML;
@@ -22,7 +22,7 @@ if (defined('WSAE_VERSION')) {
     return;
 }
 
-define('WSAE_VERSION', '1.2.6');
+define('WSAE_VERSION', '1.2.7');
 define('WSAE_FILE', __FILE__);
 define('WSAE_PATH', plugin_dir_path(WSAE_FILE));
 define('WSAE_URL', plugin_dir_url(WSAE_FILE));

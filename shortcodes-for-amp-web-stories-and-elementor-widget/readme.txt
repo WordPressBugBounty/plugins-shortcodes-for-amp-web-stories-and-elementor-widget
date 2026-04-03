@@ -6,7 +6,7 @@ Tags: web stories,amp stories,shortcode, elementor widgets,google
 Requires at least:5.0
 Tested up to:6.9
 Requires PHP:5.6
-Stable tag:1.2.6
+Stable tag:1.2.7
 License:GPLv2 or later
 License URI:http://www.gnu.org/licenses/gpl-2.0.html
  
@@ -100,6 +100,11 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 == Changelog ==
 
+= Version 1.2.7 | 03/04/2026 =
+* Tested Up To: Elementor  4.0.1
+* Tested Up To: Elementor Pro  4.0.1
+
+
 = Version 1.2.6 | 23/02/2026 =
 * Tested Up To: Elementor 3.35.5
 * Improved: Standardized text domain across plugin.
@@ -143,8 +148,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * New: Initial plugin release.
 
 == Upgrade Notice ==
-= Version 1.2.6 | 23/02/2026 =
-* Tested Up To: Elementor 3.35.5
-* Improved: Standardized text domain across plugin.
-* Fixed : Fixed issues reported by “Plugin Check” plugin.
+= Version 1.2.7 | 03/04/2026 =
+* Tested Up To: Elementor  4.0.1
+* Tested Up To: Elementor Pro  4.0.1
 
