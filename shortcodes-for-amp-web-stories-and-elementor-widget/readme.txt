@@ -4,9 +4,9 @@ Contributors:narinder-singh,satindersingh,coolplugins
 Donate link: https://paypal.me/CoolPlugins/10USD/
 Tags: web stories,amp stories,shortcode, elementor widgets,google
 Requires at least:5.0
-Tested up to:6.9
+Tested up to: 7.0
 Requires PHP:5.6
-Stable tag:1.2.7
+Stable tag:1.2.8
 License:GPLv2 or later
 License URI:http://www.gnu.org/licenses/gpl-2.0.html
  
@@ -100,6 +100,9 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 == Changelog ==
 
+= Version 1.2.8 | 05/06/2026 =
+* Improved: Code Improvements & Optimization.
+
 = Version 1.2.7 | 03/04/2026 =
 * Tested Up To: Elementor  4.0.1
 * Tested Up To: Elementor Pro  4.0.1
@@ -148,7 +151,6 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * New: Initial plugin release.
 
 == Upgrade Notice ==
-= Version 1.2.7 | 03/04/2026 =
-* Tested Up To: Elementor  4.0.1
-* Tested Up To: Elementor Pro  4.0.1
+= Version 1.2.8 | 05/06/2026 =
+* Improved: Code Improvements & Optimization.
 

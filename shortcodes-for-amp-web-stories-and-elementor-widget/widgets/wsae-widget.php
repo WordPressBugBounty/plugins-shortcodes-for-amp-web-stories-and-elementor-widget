@@ -347,22 +347,20 @@ class WSAE_Widget extends Widget_Base
 
        $settings = $this->get_settings_for_display();
 	   $singlid='';
-	   if($settings['wsae_layout']=='select'){
+	   if ( 'select' === $settings['wsae_layout'] ) {
         echo esc_html__('You have no story to show', 'shortcodes-for-amp-web-stories-and-elementor-widget');
         return;
        }
        else{
 	   foreach ($settings['wsae_ids'] as $key => $value) {
-		 if($value['title']==$settings['wsae_layout']){
+		 if ( $value['title'] === $settings['wsae_layout'] ) {
             $singlid = esc_attr($value['id']);
              
 		 }
 	   }
 	   require WSAE_PATH . 'widgets/wsae-rendor.php';
 
-	}
-	  // Escape the button text to prevent XSS
-      $button_text = isset($settings['wsae_btn_text']) ? esc_html($settings['wsae_btn_text']) : '';
+	}	  // Escape the button text to prevent XSS
 
     }
 
@@ -393,18 +391,17 @@ class WSAE_Widget extends Widget_Base
             poster='' 
             title=''  
             ;
-            var showbtn = (settings.wsae_button == "yes") ? 'block' : 'none';
+            var showbtn = (settings.wsae_button === "yes") ? 'block' : 'none';
 
 	        _.each( settings.wsae_ids, function( item, index ) {
 			
-			if(item.title==settings.wsae_layout){
+			if ( item.title === settings.wsae_layout ) {
 				url=item.url;
                 poster=item.poster;
                 title=item.title;
-                console.log(poster);
 			}
         })
-        if (settings.wsae_layout == 'select') {
+        if ( settings.wsae_layout === 'select' ) {
                 #>
                 <span><?php echo esc_html__('You have no story to show', 'shortcodes-for-amp-web-stories-and-elementor-widget'); ?></span>
                 <#
@@ -416,27 +413,29 @@ class WSAE_Widget extends Widget_Base
                       .replace(/"/g, '&quot;')
                       .replace(/'/g, '&#039;');
                 }
-                let wsae_circle = settings.wsae_style == 'circle'? 'wsae_circle':"";
+                function esc_attr(str) {
+                    return esc_html(str);
+                }
+             
+                let wsae_circle = ( settings.wsae_style === 'circle' ) ? 'wsae_circle' : '';
                 #>
                 
-                <div class="wsae-wrapper wp-block-web-stories-embed {{{wsae_circle}}} <?php echo esc_attr($align); ?>">
+                <div class="wsae-wrapper wp-block-web-stories-embed {{ wsae_circle }} <?php echo esc_attr($align); ?>">
                 <# 
                     // Determine the image source based on whether the poster is set
                     var imageSrc = (poster) ? poster : '<?php echo esc_url(WSAE_URL . 'assets/images/default_poster.png'); ?>';
                     #>
-                      <#  if (settings.wsae_style == 'circle') { #>
-                        <a href="{{{url}}}"> 
+                      <#  if ( settings.wsae_style === 'circle' ) { #>
+                        <a href="{{ url }}">
                         <div class="borderDiv">
-                            <!-- <# console.log(poster) #> -->
-                    
-                        <img src="{{{imageSrc}}}" alt="{{title}}">
-                        </div>
+                        <img src="{{ imageSrc }}" alt="{{ title }}">
+                         </div>
                         </a>
                 <# } else { #>
                         <amp-story-player class="wsae-amp">
-                            <a href="{{{url}}}" style="--story-player-poster: url({{{poster}}})">{{{esc_html(title)}}}</a>
+                            <a href="{{ url }}" style="--story-player-poster: url(&quot;{{ esc_attr(poster) }}&quot;)">{{ esc_html(title) }}</a>
                         </amp-story-player>
-                        <a href="{{{url}}}"><button class="wae_btn_setting" style="display:{{{showbtn}}};">{{{ esc_html(settings.wsae_btn_text) }}}</button></a>
+                        <a href="{{ url }}"><button class="wae_btn_setting" style="display:{{ showbtn }};">{{ esc_html(settings.wsae_btn_text) }}</button></a>
                         <# }
                     }
                     #>
@@ -445,4 +444,4 @@ class WSAE_Widget extends Widget_Base
     }    
 }
 
-\Elementor\Plugin::instance()->widgets_manager->register_widget_type(new WSAE_Widget());
+add_action('elementor/widgets/register', function($wm){ $wm->register( new WSAE_Widget() ); });

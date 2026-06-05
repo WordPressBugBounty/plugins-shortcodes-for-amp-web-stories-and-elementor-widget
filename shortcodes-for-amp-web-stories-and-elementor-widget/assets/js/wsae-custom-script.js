@@ -18,7 +18,6 @@ class wsaeWidgetClass extends elementorModules.frontend.handlers.Base {
   }
 
   bindEvents() {  
-    var slector = this.elements.$ampWrapper;
     var ampSelector = this.elements.$ampSelector;
  
     if(ampSelector.length>0){    

@@ -3,13 +3,14 @@
  * Plugin Name: Web Stories Widgets For Elementor
  * Description: Web Stories Shortcodes for recent Story [Recent-stories column="3" show-button="yes"     show-no-of-story="all" button-text="View" order="DESC" btn-color="#0063a6" btn-text-color="#f6f3ef" style="default" border-color="#BA0109" border-width="1px"].
  * Plugin URI:  https://coolplugins.net
- * Version:     1.2.7
+ * Version:     1.2.8
  * Author:      Cool Plugins
  * Author URI:  https://coolplugins.net/
  * Text Domain: shortcodes-for-amp-web-stories-and-elementor-widget   
  * License:GPLv2 or later
  * License URI:http://www.gnu.org/licenses/gpl-2.0.html
- * Elementor tested up to: 4.0.1
+ * Elementor tested up to:  4.1.1
+ * Requires Plugins: elementor, web-stories
 */
 
 use Google\Web_Stories\Story_Renderer\HTML;
@@ -22,7 +23,7 @@ if (defined('WSAE_VERSION')) {
     return;
 }
 
-define('WSAE_VERSION', '1.2.7');
+define('WSAE_VERSION', '1.2.8');
 define('WSAE_FILE', __FILE__);
 define('WSAE_PATH', plugin_dir_path(WSAE_FILE));
 define('WSAE_URL', plugin_dir_url(WSAE_FILE));
@@ -83,8 +84,8 @@ final class Webstory_Widget_Addon
             
             return $columns;
         }
-        function custom_wsae_column( $columns, $post_id ) {
-            if($columns=='shortcode'){
+        function custom_wsae_column( $column, $post_id ) {
+            if ( 'shortcode' === $column ) {
                 echo '<code>[webstory id="'.esc_attr($post_id).'"]</code>';
             }
         }    
@@ -97,7 +98,7 @@ final class Webstory_Widget_Addon
     public function wsae_recent_webstory_call($atts){
          // Load styles and scripts only if shortcodes are used in the content
         if (!class_exists('\Google\Web_Stories\Plugin')) {
-            return '<p>' . __('Error: Web Stories plugin is not activated.', 'shortcodes-for-amp-web-stories-and-elementor-widget') . '</p>';
+            return '<p>' . esc_html__('Error: Web Stories plugin is not activated.', 'shortcodes-for-amp-web-stories-and-elementor-widget') . '</p>';
         }
         wp_enqueue_style( 'wsae-standalone-amp-story-player-style' );
         wp_enqueue_script( 'wsae-standalone-amp-story-player-script' );
@@ -126,29 +127,22 @@ final class Webstory_Widget_Addon
             }
             $atts['show-button'] = sanitize_text_field($atts['show-button']);
             $atts['button-text'] = sanitize_text_field($atts['button-text']);
-            $atts['order'] = sanitize_text_field($atts['order']);
+            $atts['order'] = in_array( strtoupper( $atts['order'] ), array( 'ASC', 'DESC' ), true )? strtoupper( $atts['order'] )	: 'DESC';
             $atts['style'] = sanitize_text_field($atts['style']);
             $atts['border-width'] = sanitize_text_field($atts['border-width']);
 
             // Sanitize colors using a similar approach
-            if (sanitize_hex_color($atts['btn-color'])) {
-                $atts['btn-color'] = sanitize_hex_color($atts['btn-color']); // Valid hex color
-            } else {
-                $atts['btn-color'] = sanitize_text_field($atts['btn-color']); // Sanitize as string
-            }
+            if ($atts['btn-color']) {
+                $atts['btn-color'] = sanitize_hex_color($atts['btn-color']) ?: '#046bd2';// Valid hex color
+            } 
             
-            if (sanitize_hex_color($atts['btn-text-color'])) {
-                $atts['btn-text-color'] = sanitize_hex_color($atts['btn-text-color']); // Valid hex color
-            } else {
-                $atts['btn-text-color'] = sanitize_text_field($atts['btn-text-color']); // Sanitize as string
+            if ($atts['btn-text-color']) {
+                $atts['btn-text-color'] = sanitize_hex_color($atts['btn-text-color'])?: '#ffffff';// Valid hex color
             }
-
-            if (sanitize_hex_color($atts['border-color'])) {
-                $atts['border-color'] = sanitize_hex_color($atts['border-color']); // Valid hex color
-            } else {
-                $atts['border-color'] = sanitize_text_field($atts['border-color']); // Sanitize as string
-            }
-
+            if ($atts['border-color']) {
+                $atts['border-color'] = sanitize_hex_color($atts['border-color']) ?: 'transparent'; // Valid hex color
+            } 
+            
          $html = '';
 
          
@@ -184,14 +178,14 @@ final class Webstory_Widget_Addon
           if (sanitize_hex_color($atts['border-color'])) {
               $atts['border-color'] = sanitize_hex_color($atts['border-color']); // Valid hex color
           } else {
-              $atts['border-color'] = sanitize_text_field($atts['border-color']); // Sanitize as string
+              $atts['border-color'] = sanitize_text_field($atts['border-color']) ?: 'transparent'; // Sanitize as string
           }
 
          $html = '';
         
           
         if(empty($atts['id'])){
-            return;
+            return '';
 
         }
           
@@ -217,7 +211,7 @@ final class Webstory_Widget_Addon
         $borderWidthValue = (int) $borderWidth;
         // $wsae_circle = $atts['style'] == "circle" ? 'wsae_circle' : '';
         $imageSrc = esc_url($poster);
-        if($poster == ""){
+        if ( '' === $poster ) {
         $imageSrc = esc_url(WSAE_URL . 'assets/images/default_poster.png');
         }
 
@@ -252,55 +246,19 @@ final class Webstory_Widget_Addon
     */
 	function WSAE_plugins_loaded() {
 		
-		// Notice if the Elementor is not active
-	/*	if ( ! did_action( 'elementor/loaded' ) ) {
-			add_action( 'admin_notices', array($this, 'WSAE_fail_to_load') );
-			return;
-		}*/
-         if ( ! class_exists( '\Google\Web_Stories\Plugin' ) ) {
-            add_action('admin_notices', array($this, 'wsae_webstory_fail_to_load'));
-            return;
-
-        }
+		
        
 		
 		// Require the main plugin file
       require( __DIR__ . '/includes/class-WSAE.php' );
       
-          if( is_admin() ){
-			
-			require_once(__DIR__ . '/admin/feedback/wsae-feedback-notice.php');
-			new WSAEFeedbackNotice();
-			
-			}
+        require_once __DIR__ . '/admin/feedback/wsae-feedback-notice.php';
+        new WSAEFeedbackNotice();
 	
 	
     }	// end of ctla_loaded()
     
     
-	function WSAE_fail_to_load() { 
-        
-        if (!is_plugin_active( 'elementor/elementor.php' ) ) : ?>
-			<div class="notice notice-warning is-dismissible">
-				<p><?php 
-				// translators: %s: URL to Elementor plugin page
-				echo wp_kses_post( sprintf( __( '<a href="%s"  target="_blank" >Elementor Page Builder</a>  must be installed and activated for "<strong>Shortcodes For AMP Web Stories and Elementor Widget</strong>" to work', 'shortcodes-for-amp-web-stories-and-elementor-widget' ), esc_url( 'https://wordpress.org/plugins/elementor/' ) ) ); ?></p>
-			</div>
-        <?php endif;
-        
-    }
-    function wsae_webstory_fail_to_load()
-    {
-
-    if (current_user_can('activate_plugins')): ?>
-			<div class="notice notice-warning is-dismissible">
-				<p><?php 
-				// translators: %s: URL to Web Stories plugin page
-				echo wp_kses_post( sprintf( __( '<a href="%s"  target="_blank" >Webstory</a>  must be installed and activated for "<strong>Shortcodes For AMP Web Stories and Elementor Widget</strong>" to work', 'shortcodes-for-amp-web-stories-and-elementor-widget' ), esc_url( 'https://wordpress.org/plugins/web-stories/' ) ) ); ?></p>
-			</div>
-        <?php endif;
-
-    }
     /**
      * Run when activate plugin.
      */

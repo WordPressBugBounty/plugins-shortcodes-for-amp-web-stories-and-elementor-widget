@@ -16,7 +16,7 @@ $args = '';
 
 $html = '';
 
-$showbtn = ($settings['wsae_button'] == "yes") ? 'block' : 'none';
+$showbtn = ( 'yes' === $settings['wsae_button'] ) ? 'block' : 'none';
 
 $defaults = [
     'align' => 'none',
@@ -43,21 +43,21 @@ if (
 }
 
 $imageSrc = esc_url($poster);
-$wsae_circle = $settings['wsae_style'] == "circle" ? 'wsae_circle' : '';
-if(esc_url($poster) == ""){
+$wsae_circle = ( 'circle' === $settings['wsae_style'] ) ? 'wsae_circle' : '';
+if ( '' === $poster ) {
 $imageSrc = esc_url(WSAE_URL . 'assets/images/default_poster.png');
 }
 
 $html .= '<div class="wsae-wrapper wp-block-web-stories-embed ' . esc_attr($wsae_circle) . ' ' . esc_attr($align) . '">';
-if($settings['wsae_style'] == "circle"){
+if ( 'circle' === $settings['wsae_style'] ) {
     $html .= '   <a href="' . esc_url($url) . '" style="text-decoration:none;"> 
     <div class="borderDiv">
-    <img src="' . esc_url($imageSrc) . '" alt="' . esc_attr($title) . '" >
+    <img src="' . esc_url($imageSrc) . '" alt="' . esc_attr($title) . '">
     </div>';
     $html .= '</a>';
 }else{
     $html .= '      <amp-story-player class="wsae-amp" >
-                        <a href="' . esc_url($url) . '" style="' . esc_attr($poster_style) . '">' . esc_html($title) . '</a>
+                        <a href="' . esc_url($url) . '" style="' . esc_attr($poster_style) . '">' .$title . '</a>
                     </amp-story-player>
                     <a href="' . esc_url($url) . '" >
                       <button class="wae_btn_setting" style="display:' . esc_attr($showbtn) . ';">' . esc_html($settings['wsae_btn_text']) . '</button>
@@ -65,6 +65,6 @@ if($settings['wsae_style'] == "circle"){
                 }
 $html .= ' </div>';
             
-echo $html;  // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+echo $html; //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- HTML is assembled from escaped values only.
 
 // phpcs:enable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
